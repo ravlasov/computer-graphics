@@ -36,13 +36,6 @@ class OpenGLView(QOpenGLWidget):
         glRotatef(self.angleHorizontal, 0.0, 1.0, 0.0)
         glFlush()
 
-    def rotateLeftAroundOY(self, point, angle):
-        return [
-            point[0] * cos(angle * pi / 180) + point[2] * sin(angle * pi / 180),
-            point[1],
-            - point[0] * sin(angle * pi / 180) + point[2] * cos(angle * pi / 180)
-        ]
-
     def mousePressEvent(self, event):
         self.mousePosX = event.pos().x()
         self.mousePosY = event.pos().y()
