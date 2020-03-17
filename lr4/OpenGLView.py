@@ -89,13 +89,13 @@ class OpenGLView(QOpenGLWidget):
     def drawAxes(self):
         glBegin(GL_LINES)
         glColor3f(1.0, 0.0, 0.0)
-        glVertex3f(0.0, 0.0, 0.0)
+        glVertex3f(-1.0, 0.0, 0.0)
         glVertex3f(1.0, 0.0, 0.0)
         glColor3f(0.0, 1.0, 0.0)
-        glVertex3f(0.0, 0.0, 0.0)
+        glVertex3f(0.0, -1.0, 0.0)
         glVertex3f(0.0, 1.0, 0.0)
         glColor3f(0.0, 0.0, 1.0)
-        glVertex3f(0.0, 0.0, 0.0)
+        glVertex3f(0.0, 0.0, -1.0)
         glVertex3f(0.0, 0.0, 1.0)
         glEnd()
         # OX
@@ -124,8 +124,8 @@ class OpenGLView(QOpenGLWidget):
         self.mousePosY = event.pos().y()
 
     def mouseMoveEvent(self, event):
-        self.angleHorizontal += (event.x() - self.mousePosX)
-        self.angleVertical += (event.y() - self.mousePosY)
+        self.angleHorizontal += (event.x() - self.mousePosX) / 2
+        self.angleVertical += (event.y() - self.mousePosY) / 2
         self.mousePosX = event.x()
         self.mousePosY = event.y()
 
