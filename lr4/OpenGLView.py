@@ -1,4 +1,6 @@
 from math import *
+from random import random
+
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from PySide2.QtCore import QTimer
@@ -27,10 +29,10 @@ class OpenGLView(QOpenGLWidget):
         glMatrixMode(GL_PROJECTION)
         gluPerspective(self.visionAngleHorizontal, self.width() / self.height(), 0.1, 100.0)
         glMatrixMode(GL_MODELVIEW)
-
-        self.x = [0.3, 1, 0.5]
-        self.y = [0.7, 0.0, -0.3]
-        self.z = [0.3, -0.3, 0.3]
+        print(random())
+        self.x = [random() * 2 - 1 for _ in range(3)]
+        self.y = [random() * 2 - 1 for _ in range(3)]
+        self.z = [random() * 2 - 1 for _ in range(3)]
         self.recount()
 
         self.__timer = QTimer()
@@ -45,6 +47,8 @@ class OpenGLView(QOpenGLWidget):
     def paintGL(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
+        glEnable(GL_DEPTH_TEST)
+        glDepthFunc(GL_LESS)
         self.setView()
         self.drawAxes()
 
@@ -54,8 +58,13 @@ class OpenGLView(QOpenGLWidget):
         for i in range(len(self.actualX)):
             glVertex3f(self.actualX[i], self.actualY[i], self.actualZ[i])
         glEnd()
-
-
+        glPointSize(10)
+        glBegin(GL_POINTS)
+        for i in range(len(self.x)):
+            glVertex3f(self.x[i], self.y[i], self.z[i])
+        glEnd()
+        
+        glDisable(GL_DEPTH_TEST)
         glFlush()
 
     def recount(self):
