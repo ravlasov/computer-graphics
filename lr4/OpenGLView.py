@@ -34,7 +34,41 @@ class OpenGLView(QOpenGLWidget):
                   0.0, 1.0, 0.0)
         glRotatef(self.angleVertical, 1.0, 0.0, 0.0)
         glRotatef(self.angleHorizontal, 0.0, 1.0, 0.0)
+        self.drawAxes()
         glFlush()
+
+    def drawAxes(self):
+        glBegin(GL_LINES)
+        glColor3f(1.0, 0.0, 0.0)
+        glVertex3f(0.0, 0.0, 0.0)
+        glVertex3f(1.0, 0.0, 0.0)
+        glColor3f(0.0, 1.0, 0.0)
+        glVertex3f(0.0, 0.0, 0.0)
+        glVertex3f(0.0, 1.0, 0.0)
+        glColor3f(0.0, 0.0, 1.0)
+        glVertex3f(0.0, 0.0, 0.0)
+        glVertex3f(0.0, 0.0, 1.0)
+        glEnd()
+        # OX
+        glPushMatrix()
+        glRotatef(90, 0, 1, 0)
+        glTranslatef(0, 0, 0.8)
+        glColor3f(1.0, 0.0, 0.0)
+        gluCylinder(gluNewQuadric(), 0.05, 0, 0.2, 32, 32)
+        glPopMatrix()
+        # OY
+        glPushMatrix()
+        glRotatef(-90, 1, 0, 0)
+        glTranslatef(0, 0, 0.8)
+        glColor3f(0.0, 1.0, 0.0)
+        gluCylinder(gluNewQuadric(), 0.05, 0, 0.2, 32, 32)
+        glPopMatrix()
+        # OZ
+        glPushMatrix()
+        glTranslatef(0, 0, 0.8)
+        glColor3f(0.0, 0.0, 1.0)
+        gluCylinder(gluNewQuadric(), 0.05, 0, 0.2, 32, 32)
+        glPopMatrix()
 
     def mousePressEvent(self, event):
         self.mousePosX = event.pos().x()
