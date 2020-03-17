@@ -12,6 +12,7 @@ class OpenGLView(QOpenGLWidget):
     mousePosY = 0
     angleHorizontal = 0
     angleVertical = 0
+    distance = 1
 
     def initializeGL(self):
         glMatrixMode(GL_PROJECTION)
@@ -28,14 +29,18 @@ class OpenGLView(QOpenGLWidget):
     def paintGL(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
-        glTranslatef(0.0, 0.0, -1)
-        gluLookAt(0.0, 0.0, 1.0,
-                  0.0, 0.0, 0.0,
-                  0.0, 1.0, 0.0)
-        glRotatef(self.angleVertical, 1.0, 0.0, 0.0)
-        glRotatef(self.angleHorizontal, 0.0, 1.0, 0.0)
+        self.setView()
         self.drawAxes()
         glFlush()
+
+    def setView(self):
+        glTranslatef(0.0, 0.0, -1)
+        gluLookAt(1.0, 1.0, 1.0,
+                  0.0, 0.0, 0.0,
+                  0.0, 1.0, 0.0)
+        glScalef(self.distance, self.distance, self.distance)
+        glRotatef(self.angleVertical, 1.0, 0.0, 0.0)
+        glRotatef(self.angleHorizontal, 0.0, 1.0, 0.0)
 
     def drawAxes(self):
         glBegin(GL_LINES)
@@ -79,3 +84,7 @@ class OpenGLView(QOpenGLWidget):
         self.angleVertical += (event.y() - self.mousePosY)
         self.mousePosX = event.x()
         self.mousePosY = event.y()
+
+    def wheelEvent(self, event):
+        if self.distance + (event.delta() / 1000) > 0:
+            self.distance += (event.delta() / 1000)
