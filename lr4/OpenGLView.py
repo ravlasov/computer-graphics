@@ -29,7 +29,6 @@ class OpenGLView(QOpenGLWidget):
         glMatrixMode(GL_PROJECTION)
         gluPerspective(self.visionAngleHorizontal, self.width() / self.height(), 0.1, 100.0)
         glMatrixMode(GL_MODELVIEW)
-        print(random())
         self.x = [random() * 2 - 1 for _ in range(3)]
         self.y = [random() * 2 - 1 for _ in range(3)]
         self.z = [random() * 2 - 1 for _ in range(3)]
