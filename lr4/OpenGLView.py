@@ -3,6 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from PySide2.QtCore import QTimer
 from PySide2.QtWidgets import QOpenGLWidget
+from lr4.SplineInterpolate import *
 
 
 class OpenGLView(QOpenGLWidget):
@@ -14,13 +15,28 @@ class OpenGLView(QOpenGLWidget):
     angleVertical = 0
     distance = 1
 
+    x = []
+    y = []
+    z = []
+    t = []
+    actualX = []
+    actualY = []
+    actualZ = []
+
     def initializeGL(self):
         glMatrixMode(GL_PROJECTION)
         gluPerspective(self.visionAngleHorizontal, self.width() / self.height(), 0.1, 100.0)
         glMatrixMode(GL_MODELVIEW)
+
+        self.x = [0.3, 1, 0.5]
+        self.y = [0.7, 0.0, -0.3]
+        self.z = [0.3, -0.3, 0.3]
+        self.recount()
+
         self.__timer = QTimer()
         self.__timer.timeout.connect(self.repaint)
         self.__timer.start(1000 / self.frameRate)
+
 
     def resizeGL(self, width, height):
         glViewport(0, 0, width, height)
@@ -31,7 +47,26 @@ class OpenGLView(QOpenGLWidget):
         glLoadIdentity()
         self.setView()
         self.drawAxes()
+
+        glLineWidth(3)
+        glBegin(GL_LINE_STRIP)
+        glColor3f(1, 1, 1)
+        for i in range(len(self.actualX)):
+            glVertex3f(self.actualX[i], self.actualY[i], self.actualZ[i])
+        glEnd()
+
+
         glFlush()
+
+    def recount(self):
+        self.t = [i * 1000 for i in range(len(self.x))]
+        splineX = BuildSpline(self.t, self.x, len(self.x))
+        splineY = BuildSpline(self.t, self.y, len(self.x))
+        splineZ = BuildSpline(self.t, self.z, len(self.x))
+        for i in range(self.t[0], self.t[len(self.t) - 1]):
+            self.actualX.append(Interpolate(splineX, i))
+            self.actualY.append(Interpolate(splineY, i))
+            self.actualZ.append(Interpolate(splineZ, i))
 
     def setView(self):
         glTranslatef(0.0, 0.0, -1)
