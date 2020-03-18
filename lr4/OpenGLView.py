@@ -3,6 +3,7 @@ from random import random
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
+from PySide2 import QtCore
 from PySide2.QtCore import QTimer
 from PySide2.QtWidgets import QOpenGLWidget
 from lr4.SplineInterpolate import *
@@ -123,8 +124,9 @@ class OpenGLView(QOpenGLWidget):
         self.mousePosY = event.pos().y()
 
     def mouseMoveEvent(self, event):
-        self.angleHorizontal += (event.x() - self.mousePosX) / 2
-        self.angleVertical += (event.y() - self.mousePosY) / 2
+        if event.buttons() & QtCore.Qt.MouseButton.RightButton:
+            self.angleHorizontal += (event.x() - self.mousePosX) / 2
+            self.angleVertical += (event.y() - self.mousePosY) / 2
         self.mousePosX = event.x()
         self.mousePosY = event.y()
 
