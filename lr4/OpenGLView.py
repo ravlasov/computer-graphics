@@ -14,8 +14,8 @@ class OpenGLView(QOpenGLWidget):
     visionAngleHorizontal = 90.0
     mousePosX = 0
     mousePosY = 0
-    angleHorizontal = 0
-    angleVertical = 0
+    angleHorizontal = 45
+    angleVertical = 45
     distance = 1
 
     x = []
@@ -79,7 +79,7 @@ class OpenGLView(QOpenGLWidget):
 
     def setView(self):
         glTranslatef(0.0, 0.0, -1)
-        gluLookAt(1.0, 1.0, 1.0,
+        gluLookAt(0.0, 0.0, 1.0,
                   0.0, 0.0, 0.0,
                   0.0, 1.0, 0.0)
         glScalef(self.distance, self.distance, self.distance)
