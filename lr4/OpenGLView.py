@@ -1,6 +1,7 @@
 from math import *
 from random import random
 
+import numpy
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from PySide2 import QtCore
@@ -68,6 +69,9 @@ class OpenGLView(QOpenGLWidget):
         glFlush()
 
     def recount(self):
+        self.actualX = []
+        self.actualY = []
+        self.actualZ = []
         self.t = [i * 1000 for i in range(len(self.x))]
         splineX = BuildSpline(self.t, self.x, len(self.x))
         splineY = BuildSpline(self.t, self.y, len(self.x))
@@ -124,12 +128,19 @@ class OpenGLView(QOpenGLWidget):
         self.mousePosY = event.pos().y()
 
     def mouseMoveEvent(self, event):
-        if event.buttons() & QtCore.Qt.MouseButton.RightButton:
+        if event.buttons() & QtCore.Qt.MouseButton.LeftButton:
+            self.x[1] += (event.x() - self.mousePosX) / 500
+            self.y[1] += (event.y() - self.mousePosY) / 500
+            self.recount()
+        elif event.buttons() & QtCore.Qt.MouseButton.RightButton:
             self.angleHorizontal += (event.x() - self.mousePosX) / 2
             self.angleVertical += (event.y() - self.mousePosY) / 2
         self.mousePosX = event.x()
         self.mousePosY = event.y()
 
     def wheelEvent(self, event):
-        if self.distance + (event.delta() / 1000) > 0:
+        if event.buttons() & QtCore.Qt.MouseButton.LeftButton:
+            self.z[1] += event.delta() / 1000
+            self.recount()
+        elif self.distance + (event.delta() / 1000) > 0:
             self.distance += (event.delta() / 1000)
