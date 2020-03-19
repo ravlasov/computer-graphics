@@ -4,7 +4,7 @@ from random import random
 from OpenGLView import OpenGLView
 from PySide2 import QtCore
 from PySide2.QtWidgets import (QApplication, QVBoxLayout, QHBoxLayout, QDialog, QSpacerItem,
-                               QSizePolicy, QLabel, QSpinBox, QSlider, QDoubleSpinBox, QFrame)
+                               QSizePolicy, QLabel, QSpinBox, QSlider, QDoubleSpinBox, QFrame, QRadioButton)
 
 
 class MainWindow(QDialog):
@@ -51,6 +51,9 @@ class MainWindow(QDialog):
             self.z.append(w[2].value())
         self.OpenGLWidget.updatePoints(self.x, self.y, self.z)
 
+    def onModeRadioButtonToggled(self):
+        self.OpenGLWidget.setMode(self.cubicSplineInterpolationMode.isChecked())
+
     def createPointWidget(self, x, y, z):
         layout = QHBoxLayout()
         x_label = QLabel("x:")
@@ -90,47 +93,24 @@ class MainWindow(QDialog):
         return layout
 
     def setupLayout(self):
-        self.widgets = []
         # OpenGL widget
         glWidgetW = 800
         glWidgetH = 900
         self.OpenGLWidget = OpenGLView()
         self.OpenGLWidget.setFixedSize(glWidgetW, glWidgetH)
         self.OpenGLWidget.updatePoints(self.x, self.y, self.z)
-        '''# number of points
-        minPoints = 3
-        maxPoints = 10
-        self.pointsAmountLabel = QLabel("Number of points: ")
-        self.pointsAmountSpinBox = QSpinBox()
-        self.pointsAmountSpinBox.setMinimum(minPoints)
-        self.pointsAmountSpinBox.setMaximum(maxPoints)
-        self.pointsAmountSpinBox.setValue(self.points)
-        self.pointsAmountSpinBox.valueChanged.connect(self.onSpinPointsChanged)
-        self.pointsAmountSlider = QSlider(QtCore.Qt.Horizontal)
-        self.pointsAmountSlider.setValue(self.points)
-        self.pointsAmountSlider.setMinimum(minPoints)
-        self.pointsAmountSlider.setMaximum(maxPoints)
-        self.pointsAmountSlider.valueChanged.connect(self.onSliderPointsChanged)
-        self.pointsAmountMinLabel = QLabel("Min: %d" % minPoints)
-        self.pointsAmountMinLabel.setFixedWidth(40)
-        self.pointsAmountMaxLabel = QLabel("Max: %d" % maxPoints)
-        self.pointsAmountMaxLabel.setFixedWidth(60)
-        # points amount layout
-        layoutAmount = QHBoxLayout()
-        layoutAmount.addWidget(self.pointsAmountMinLabel)
-        layoutAmount.addWidget(self.pointsAmountSpinBox)
-        layoutAmount.addWidget(self.pointsAmountMaxLabel)
-        line1 = QFrame()
-        line1.setFrameShape(QFrame.HLine)'''
+        # radio buttons
+        self.cubicSplineInterpolationMode = QRadioButton("Cubic Spline Interpolation mode")
+        self.cubicSplineInterpolationMode.setChecked(True)
+        self.cubicSplineInterpolationMode.toggled.connect(self.onModeRadioButtonToggled)
+        self.BesierCurveMode = QRadioButton(" Besier Curve mode")
         # point coords layout
         pointsLayout = QVBoxLayout()
         [pointsLayout.addLayout(self.createPointWidget(self.x[i], self.y[i], self.z[i])) for i in range(self.points)]
-
         # tools panel layout
         layoutTools = QVBoxLayout()
-        '''layoutTools.addLayout(layoutAmount)
-        layoutTools.addWidget(self.pointsAmountSlider)
-        layoutTools.addWidget(line1)'''
+        layoutTools.addWidget(self.cubicSplineInterpolationMode)
+        layoutTools.addWidget(self.BesierCurveMode)
         layoutTools.addLayout(pointsLayout)
         verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
         layoutTools.addItem(verticalSpacer)

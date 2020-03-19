@@ -1,13 +1,14 @@
 from math import *
 from random import random
 
-import numpy
+import numpy as np
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from PySide2 import QtCore
 from PySide2.QtCore import QTimer
 from PySide2.QtWidgets import QOpenGLWidget
 from lr4.SplineInterpolate import *
+from lr4.BesierCurve import *
 
 
 class OpenGLView(QOpenGLWidget):
@@ -19,18 +20,23 @@ class OpenGLView(QOpenGLWidget):
     angleVertical = 45
     distance = 1
 
+    mode = True
     x = []
     y = []
     z = []
     actualX = []
     actualY = []
     actualZ = []
+    matrix = []
 
     def updatePoints(self, x, y, z):
         self.x = x
         self.y = y
         self.z = z
         self.recount()
+
+    def setMode(self, mode):
+        self.mode = mode
 
     def initializeGL(self):
         glMatrixMode(GL_PROJECTION)
@@ -40,7 +46,6 @@ class OpenGLView(QOpenGLWidget):
         self.__timer = QTimer()
         self.__timer.timeout.connect(self.repaint)
         self.__timer.start(1000 / self.frameRate)
-
 
     def resizeGL(self, width, height):
         glViewport(0, 0, width, height)
@@ -55,10 +60,15 @@ class OpenGLView(QOpenGLWidget):
         self.drawAxes()
 
         glLineWidth(3)
-        glBegin(GL_LINE_STRIP)
         glColor3f(1, 1, 1)
-        for i in range(len(self.actualX)):
-            glVertex3f(self.actualX[i], self.actualY[i], self.actualZ[i])
+        glBegin(GL_LINE_STRIP)
+        if self.mode:
+            for i in range(len(self.actualX)):
+                glVertex3f(self.actualX[i], self.actualY[i], self.actualZ[i])
+        else:
+            glColor3f(1, 0, 1)
+            for i in range(len(self.matrix)):
+                glVertex3fv(self.matrix[i])
         glEnd()
         glPointSize(10)
         for i in range(len(self.x)):
@@ -70,6 +80,7 @@ class OpenGLView(QOpenGLWidget):
         glFlush()
 
     def recount(self):
+        # cubic spline interpolation
         self.actualX = []
         self.actualY = []
         self.actualZ = []
@@ -81,6 +92,11 @@ class OpenGLView(QOpenGLWidget):
             self.actualX.append(Interpolate(splineX, i))
             self.actualY.append(Interpolate(splineY, i))
             self.actualZ.append(Interpolate(splineZ, i))
+
+        # Besier curve
+        self.matrix = np.array([self.x, self.y, self.z]).transpose()
+        self.matrix = calculateBesierCurve(self.matrix)
+
 
     def setView(self):
         glTranslatef(0.0, 0.0, -1)
