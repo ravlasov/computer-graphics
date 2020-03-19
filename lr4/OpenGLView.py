@@ -61,11 +61,11 @@ class OpenGLView(QOpenGLWidget):
             glVertex3f(self.actualX[i], self.actualY[i], self.actualZ[i])
         glEnd()
         glPointSize(10)
-        glBegin(GL_POINTS)
         for i in range(len(self.x)):
-            glVertex3f(self.x[i], self.y[i], self.z[i])
-        glEnd()
-        
+            glPushMatrix()
+            glTranslatef(self.x[i], self.y[i], self.z[i])
+            gluSphere(gluNewQuadric(), 0.02, 32, 32)
+            glPopMatrix()
         glDisable(GL_DEPTH_TEST)
         glFlush()
 
