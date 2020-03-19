@@ -66,7 +66,6 @@ class OpenGLView(QOpenGLWidget):
             for i in range(len(self.actualX)):
                 glVertex3f(self.actualX[i], self.actualY[i], self.actualZ[i])
         else:
-            glColor3f(1, 0, 1)
             for i in range(len(self.matrix)):
                 glVertex3fv(self.matrix[i])
         glEnd()
