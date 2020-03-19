@@ -104,6 +104,8 @@ class MainWindow(QDialog):
         self.cubicSplineInterpolationMode.setChecked(True)
         self.cubicSplineInterpolationMode.toggled.connect(self.onModeRadioButtonToggled)
         self.BesierCurveMode = QRadioButton(" Besier Curve mode")
+        line1 = QFrame()
+        line1.setFrameShape(QFrame.HLine)
         # point coords layout
         pointsLayout = QVBoxLayout()
         [pointsLayout.addLayout(self.createPointWidget(self.x[i], self.y[i], self.z[i])) for i in range(self.points)]
@@ -111,6 +113,7 @@ class MainWindow(QDialog):
         layoutTools = QVBoxLayout()
         layoutTools.addWidget(self.cubicSplineInterpolationMode)
         layoutTools.addWidget(self.BesierCurveMode)
+        layoutTools.addWidget(line1)
         layoutTools.addLayout(pointsLayout)
         verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
         layoutTools.addItem(verticalSpacer)
