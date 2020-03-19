@@ -22,19 +22,20 @@ class OpenGLView(QOpenGLWidget):
     x = []
     y = []
     z = []
-    t = []
     actualX = []
     actualY = []
     actualZ = []
+
+    def updatePoints(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.recount()
 
     def initializeGL(self):
         glMatrixMode(GL_PROJECTION)
         gluPerspective(self.visionAngleHorizontal, self.width() / self.height(), 0.1, 100.0)
         glMatrixMode(GL_MODELVIEW)
-        self.x = [random() * 2 - 1 for _ in range(3)]
-        self.y = [random() * 2 - 1 for _ in range(3)]
-        self.z = [random() * 2 - 1 for _ in range(3)]
-        self.recount()
 
         self.__timer = QTimer()
         self.__timer.timeout.connect(self.repaint)
@@ -72,11 +73,11 @@ class OpenGLView(QOpenGLWidget):
         self.actualX = []
         self.actualY = []
         self.actualZ = []
-        self.t = [i * 1000 for i in range(len(self.x))]
-        splineX = BuildSpline(self.t, self.x, len(self.x))
-        splineY = BuildSpline(self.t, self.y, len(self.x))
-        splineZ = BuildSpline(self.t, self.z, len(self.x))
-        for i in range(self.t[0], self.t[len(self.t) - 1]):
+        t = [i * 1000 for i in range(len(self.x))]
+        splineX = BuildSpline(t, self.x, len(self.x))
+        splineY = BuildSpline(t, self.y, len(self.x))
+        splineZ = BuildSpline(t, self.z, len(self.x))
+        for i in range(t[0], t[len(t) - 1]):
             self.actualX.append(Interpolate(splineX, i))
             self.actualY.append(Interpolate(splineY, i))
             self.actualZ.append(Interpolate(splineZ, i))
