@@ -154,7 +154,7 @@ class OpenGLView(QOpenGLWidget):
         self.mousePosY = event.pos().y()
 
     def mouseMoveEvent(self, event):
-        if event.buttons() & QtCore.Qt.MouseButton.RightButton:
+        if event.buttons() & QtCore.Qt.MouseButton.LeftButton:
             self.angleHorizontal += (event.x() - self.mousePosX) / 2
             self.angleVertical += (event.y() - self.mousePosY) / 2
         self.mousePosX = event.x()
