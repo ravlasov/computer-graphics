@@ -16,7 +16,7 @@ class OpenGLView(QOpenGLWidget):
     visionAngleHorizontal = 90.0
     mousePosX = 0
     mousePosY = 0
-    angleHorizontal = 45
+    angleHorizontal = -45
     angleVertical = 45
     distance = 1
 
