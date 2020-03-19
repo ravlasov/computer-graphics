@@ -75,6 +75,16 @@ class OpenGLView(QOpenGLWidget):
             glTranslatef(self.x[i], self.y[i], self.z[i])
             gluSphere(gluNewQuadric(), 0.02, 32, 32)
             glPopMatrix()
+        if not self.mode:
+            glEnable(GL_LINE_STIPPLE)
+            glLineStipple(1, 0x00FF)
+            glLineWidth(1)
+            glBegin(GL_LINE_STRIP)
+            glColor(1, 0, 1)
+            for i in range(len(self.x)):
+                glVertex3f(self.x[i], self.y[i], self.z[i])
+            glEnd()
+            glDisable(GL_LINE_STIPPLE)
         glDisable(GL_DEPTH_TEST)
         glFlush()
 
