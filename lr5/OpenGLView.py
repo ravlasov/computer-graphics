@@ -1,4 +1,5 @@
 import os
+
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 from OpenGL.GLU import *
@@ -11,10 +12,10 @@ VS_SOURCE = "./shader.vert"
 FS_SOURCE = "./shader.frag"
 TEX_SOURCE = "./texture.png"
 
-class OpenGLView(QOpenGLWidget):
-    frameRate = 30
-    visionAngleHorizontal = 90.0
 
+class OpenGLView(QOpenGLWidget):
+    frameRate = None
+    visionAngleHorizontal = 90.0
 
     def initializeGL(self):
         glDepthRange(0, 1)
@@ -44,13 +45,15 @@ class OpenGLView(QOpenGLWidget):
 
         VS = open(VS_SOURCE, "r").read()
         FS = open(FS_SOURCE, "r").read()
+        glutInit(sys.argv)
 
         self.shader = Shader()
         self.shader.compile(VS, FS)
 
-        self.__timer = QTimer()
-        self.__timer.timeout.connect(self.repaint)
-        self.__timer.start(1000 / self.frameRate)
+        if (self.frameRate != None):
+            self.__timer = QTimer()
+            self.__timer.timeout.connect(self.repaint)
+            self.__timer.start(1000 / self.frameRate)
 
     def resizeGL(self, width, height):
         glViewport(0, 0, width, height)
@@ -64,18 +67,29 @@ class OpenGLView(QOpenGLWidget):
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glClearColor(0, 0, 0, 1.0)
 
-        self.shader.use()
+        self.printText(-1, 0.53, GLUT_BITMAP_TIMES_ROMAN_24, b"Original", 1, 0, 1, 1)
+        self.printText(0, 0.53, GLUT_BITMAP_TIMES_ROMAN_24, b"Processed", 1, 1, 1, 1)
 
+        self.drawTexture(-1, -0.5, 1, 1)
+        self.shader.use()
+        self.drawTexture(0, -0.5, 1, 1)
+
+        self.shader.unuse()
+
+    def drawTexture(self, x, y, sizeX, sizeY):
         glBindTexture(GL_TEXTURE_2D, self.texID)
         glBegin(GL_QUADS)
         glTexCoord2f(1, 1)
-        glVertex2f(-0.5, -0.5)
+        glVertex2f(x, y)
         glTexCoord2f(1, 0)
-        glVertex2f(-0.5, 0.5)
+        glVertex2f(x, y + sizeY)
         glTexCoord2f(0, 0)
-        glVertex2f(0.5, 0.5)
+        glVertex2f(x + sizeX, y + sizeY)
         glTexCoord2f(0, 1)
-        glVertex2f(0.5, -0.5)
+        glVertex2f(x + sizeX, y)
         glEnd()
 
-        self.shader.unuse()
+    def printText(self, x, y, font, text, r, g, b, a):
+        glColor4f(r, g, b, a)
+        glRasterPos2f(x, y)
+        glutBitmapString(font, text)
