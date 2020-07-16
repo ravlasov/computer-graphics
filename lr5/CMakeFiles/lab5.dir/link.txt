@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/lab5.dir/main.cpp.o CMakeFiles/lab5.dir/Shader.cpp.o CMakeFiles/lab5.dir/Camera.cpp.o  -o lab5 /usr/local/lib/libglfw3.a -lGLEW /usr/lib/x86_64-linux-gnu/libGL.so /usr/local/lib/libSOIL.a -lpthread /usr/lib/x86_64-linux-gnu/librt.so -lm -ldl 
