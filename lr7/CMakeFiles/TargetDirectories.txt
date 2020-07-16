@@ -1,0 +1,3 @@
+/home/ravlasov/Documents/computer-graphics/lr7/CMakeFiles/rebuild_cache.dir
+/home/ravlasov/Documents/computer-graphics/lr7/CMakeFiles/lab7.dir
+/home/ravlasov/Documents/computer-graphics/lr7/CMakeFiles/edit_cache.dir
